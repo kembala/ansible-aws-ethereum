@@ -1,0 +1,15 @@
+---
+
+- apt_repository:
+    repo: ppa:ethereum/ethereum
+    state: present
+    validate_certs: no
+
+- apt_repository:
+    repo: ppa:ethereum/ethereum-dev
+    state: present
+    validate_certs: no
+    update_cache: yes
+
+- apt:
+    name: ethereum

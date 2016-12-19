@@ -1,0 +1,10 @@
+---
+- name: Obtain enode for bootnode
+  shell: bash -c "geth --networkid 420 js <(echo 'console.log(admin.nodeInfo.enode); exit();')" 2>/dev/null |grep enode | perl -pe s"/\[\:\:\]/{{inventory_hostname}}/g"
+  args:
+    executable: /bin/bash
+  register: bootnode
+
+- debug:
+    msg:
+      Boot enode: "{bootnode.stdout_lines[0]}}"

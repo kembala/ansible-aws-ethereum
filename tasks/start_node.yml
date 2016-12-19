@@ -1,0 +1,11 @@
+---
+- name: Get address
+  args:
+    executable: /bin/bash
+  shell: "echo `geth account list|head -n1|perl -ne '/([a-f0-9]{40})/ && print $1'`"
+  register: address
+
+- name: Start node
+  args:
+    executable: /bin/bash
+  shell: "geth --identity {{inventory_hostname}} --rpc --rpcport '8080' --rpcapi 'db,eth,net,web3' --networkid 420 --bootnodes {{hostvars[groups['tag_role_master'][0]]['bootnode'].stdout_lines[0]}} $*  2>&1 | tee 'stablelog' > 'log' & "

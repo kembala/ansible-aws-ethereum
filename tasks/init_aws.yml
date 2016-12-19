@@ -1,0 +1,56 @@
+---
+- name: Create security group
+  ec2_group:
+    name: "{{ ec2_secgroup }}"
+    description: "Security rules for {{ stack }} cluster"
+    rules:
+      - proto: all
+        from_port: -1
+        to_port: -1
+        cidr_ip: 0.0.0.0/0
+    rules_egress:
+      - proto: all
+        from_port: -1
+        to_port: -1
+        cidr_ip: 0.0.0.0/0
+    region: "{{ ec2_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+
+- name: Launch master
+  ec2:
+    region: "{{ ec2_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    keypair: "{{ ssh_keypair }}"
+    group: "{{ ec2_secgroup }}"
+    instance_type: "{{ ec2_instance_type }}"
+    image: "{{ base_ami }}"
+    instance_tags: 
+      project: "{{stack}}"
+      role: "master"
+    count_tag:
+      project: "{{stack}}"
+      role: "master"
+    exact_count: "1"
+    wait: true
+  register: ec2
+
+- name: Launch slaves
+  ec2: 
+    region: "{{ ec2_region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    keypair: "{{ ssh_keypair }}"
+    group: "{{ ec2_secgroup }}"
+    instance_type: "{{ ec2_instance_type }}"
+    image: "{{ base_ami }}"
+    instance_tags: 
+      project: "{{stack}}"
+      role: "slave"
+    count_tag:
+      project: "{{stack}}"
+      role: "slave"
+    exact_count: "{{eth_node_count - 1}}"
+    wait: true
+  register: ec2

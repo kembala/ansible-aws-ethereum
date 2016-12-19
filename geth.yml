@@ -1,0 +1,51 @@
+---
+
+- name: Create AWS instances
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars_files:
+    - vars/config.yml
+
+  tasks:
+    - set_fact:
+       enode: " "
+    - include: tasks/init_aws.yml
+    - include: tasks/wait_ssh.yml
+
+- name: Install geth
+  hosts: tag_role_master:tag_role_slave
+  become: True
+  gather_facts: no
+
+  vars_files:
+    - vars/config.yml
+
+  tasks:
+    - include: tasks/install_geth.yml
+
+- name: Init and start bootnode
+  hosts: tag_role_master
+  become: True
+ 
+  vars_files:
+    - vars/config.yml
+
+  tasks:
+    - include: tasks/init_node.yml
+    - include: tasks/obtain_bootnode.yml
+    - include: tasks/start_node.yml
+
+- name: Init and start nodes
+  hosts: tag_role_slave
+  become: True
+
+  vars_files:
+    - vars/config.yml
+
+  tasks:
+    - include: tasks/init_node.yml
+    - include: tasks/start_node.yml
+    - include: tasks/gethinfo.yml
+

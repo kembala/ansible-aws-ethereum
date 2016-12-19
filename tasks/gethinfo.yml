@@ -1,0 +1,5 @@
+---
+- name: How to connect
+  debug:
+    msg:
+      command: "geth --rpc --rpcport '8080' --rpcapi 'db,eth,net,web3' --rpccorsdomain '*' --networkid 420 --bootnodes {{hostvars[groups['tag_role_master'][0]]['bootnode'].stdout_lines[0]}}"

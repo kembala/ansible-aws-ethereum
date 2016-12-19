@@ -1,0 +1,36 @@
+---
+#####################
+#   Basic settings  #
+#####################
+
+#Set the name your stack
+stack: ethereum
+
+#Set the owner (your username)
+owner: ubuntu
+
+#Set node count
+eth_node_count: 3
+
+###################
+#   AWS settings  #
+###################
+
+#Set up your AWS keys
+aws_access_key: ###
+aws_secret_key: ###
+
+#Set instance to use
+ec2_instance_type: t2.micro
+
+## Set base AMI to use (Ubuntu 14.14 - ami-01f05461) (Ubuntu 16.04 - ami-a9d276c9)
+base_ami: ami-01f05461
+
+## Set region
+ec2_region: us-west-2
+
+# Set SSH Keypair to use
+ssh_keypair: "aws-testvm"
+
+# Set secgroup to create
+ec2_secgroup: "{{ stack }}-secgroup"

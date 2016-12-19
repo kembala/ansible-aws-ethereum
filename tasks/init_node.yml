@@ -1,0 +1,23 @@
+---
+- name: Copy custom genesis file
+  copy:
+    src: ~/ansible-aws-ethereum/CustomGenesis.json
+    dest: ~/CustomGenesis.json
+    owner: ubuntu
+    mode: "u=r,g=r,o=r"
+
+- name: Create account
+  shell: "geth --password <(echo -n 1234) account new"
+  args:
+    executable: /bin/bash
+  register: address
+
+- debug:
+    msg:
+      address: "{{address.stdout_lines[0]}}"
+      password: " 1234"
+
+- name: Init chain
+  shell: "geth --networkid 420 init ~/CustomGenesis.json"
+  args:
+    executable: /bin/bash
